@@ -1,0 +1,16 @@
+###
+# Parsefile for snackrequests
+# 2017-10-20
+###
+
+name: snack requests
+description: “Snack requests made by Enigma employees“
+maintainers:
+  - India Kerle <india.kerle@enigma.com>
+version: "0.1.0"
+license: none
+source_urls:
+  - “FTP”
+
+extract:
+  - data.yaml

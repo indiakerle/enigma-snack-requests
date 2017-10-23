@@ -1,0 +1,19 @@
+###
+# snackrequests
+# 2017-10-20
+###
+
+extract:
+  - step: Download the file
+    action: extract.source.ftp.DownloadFiles
+    trusted: true
+    host: ftp.enigma.io
+    user: '{ context.user }'
+    password: '{ context.password }'
+    fetch:
+      - /enigma.unpublished/snackrequests_unpublishedcollection2.csv
+
+  - step: Direct flow to the main codec.
+    action: parsekit.ApplyCodec
+    trusted: yes
+    codec: snacks

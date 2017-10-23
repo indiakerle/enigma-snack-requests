@@ -1,0 +1,47 @@
+
+transform:
+  - step: Set the faa midair collisions table datapath.
+    action: load.SetTableName
+    table_name: enigma-internal.unpublished.snack-requests
+
+  - step: Set the table schema.
+    action: transform.schema.SetSchema
+    fields:
+      - name: timestamp
+        type: datetime
+      - name: office_requests
+        type: string
+      - name: snack_requests
+        type: string 
+
+  - step: Filter header
+    action: transform.filter.FilterLines
+    filter_list:
+      - line_number: 0
+        patterns:
+          - '^Timestamp.*$'
+
+  - step: Read the CSV.
+    action: extract.formats.CSV.ReadRecords
+    timezone: 'US/Eastern'
+    content_encoding: 'ISO8859'
+
+  - step: Coerce null values to None
+    action: transform.strings.DisambiguateNulls
+    nulls:
+      - ''
+
+  - step: Parse all the dates.
+    action: transform.conversion.ParseDatetime
+    fields: 
+      - field_name: timestamp 
+        formats:
+          - "M/D/YY h:mm:ss"
+          - "M/D/YY h:mm"
+load:
+  - step: Output the Enigma snack requests table to Abstract.
+    action: load.OutputAbstract
+    trusted: yes
+    db_boundary: enigma-internal.unpublished
+    repository: '{ context.repository }'
+    credentials: '{ context.credentials }'
